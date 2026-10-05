@@ -20,3 +20,7 @@ Redeploy after adding or changing environment variables. The backend is not part
 Currency shown in prices is set with `VITE_CURRENCY` (default NGN).
 
 Sign in with the admin account created in the backend setup. Create staff logins under **Staff**, add items under **Products**.
+
+## Admin activity feed
+
+The admin **Activity & payments** page reads `GET /api/activity` and expects a JSON array with `id`, `created_at`, `staff_name`, `action`, `description` (or `details`), and optional numeric `amount`. The backend must record events for sales/payments and relevant inventory changes (such as product deletion and price updates); the frontend cannot reconstruct deleted or previous values from the current products API. Protect this endpoint for admin users.

@@ -103,11 +103,16 @@ export function Products() {
 export function Staff() {
   const [list, reload, loadErr, loading] = useLoad('/staff');
   const blank = { full_name: '', email: '', password: '' };
-  const [f, setF] = useState(blank), [err, setErr] = useState('');
+  const [f, setF] = useState(blank), [err, setErr] = useState(''), [notice, setNotice] = useState(''), [creating, setCreating] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const add = async (e) => {
-    e.preventDefault(); setErr('');
-    try { await api('/staff', { method: 'POST', body: f }); setF(blank); reload(); } catch (x) { setErr(x.message); }
+    e.preventDefault(); setErr(''); setNotice(''); setCreating(true);
+    try {
+      const result = await api('/staff', { method: 'POST', body: f });
+      setNotice(result.email_sent ? `Staff account created and welcome email sent to ${f.email}.` : `Staff account created, but the welcome email was not sent. ${result.email_message || ''}`);
+      setF(blank); reload();
+    } catch (x) { setErr(x.message); }
+    finally { setCreating(false); }
   };
   const patch = (id, body) => api('/staff/' + id, { method: 'PATCH', body }).then(reload).catch((x) => setErr(x.message));
   return (<>
@@ -115,9 +120,10 @@ export function Staff() {
     <form className="row card" onSubmit={add}>
       <input required placeholder="Full name" value={f.full_name} onChange={set('full_name')} />
       <input required type="email" placeholder="Email" value={f.email} onChange={set('email')} />
-      <input required minLength="6" placeholder="Password (6+ characters)" value={f.password} onChange={set('password')} />
-      <button className="primary">Create staff login</button><Err e={err} />
+      <input required type="password" autoComplete="new-password" minLength="6" placeholder="Password (6+ characters; emailed to staff)" value={f.password} onChange={set('password')} />
+      <button className="primary" disabled={creating}>{creating ? 'Creating account...' : 'Create staff login'}</button><Err e={err} />
     </form>
+    {notice && <p className="note" role="status">{notice}</p>}
     {loadErr && <Err e={loadErr} />}
     {!list && loading && <BrandLoader label="Loading staff..." />}
     <table><thead><tr><th>Name</th><th>Email</th><th>Last login</th><th>Status</th><th></th></tr></thead><tbody>
@@ -142,6 +148,19 @@ export function Logins() {
     <table><thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Signed in</th></tr></thead><tbody>
       {list?.map((l) => <tr key={l.id}><td><b>{l.full_name}</b></td><td>{l.email}</td><td>{l.role}</td><td>{dateTime(l.logged_in_at)}</td></tr>)}
       {list?.length === 0 && <tr><td colSpan="4" className="empty">No logins recorded yet.</td></tr>}
+    </tbody></table>
+  </>);
+}
+
+export function Activity() {
+  const [list, reload, loadErr, loading] = useLoad('/activity');
+  return (<>
+    <h2>Staff activity &amp; payments <button onClick={reload}>Refresh</button></h2>
+    {loadErr && <Err e={loadErr} />}
+    {!list && loading && <BrandLoader label="Loading staff activity..." />}
+    <table><thead><tr><th>Date</th><th>Staff</th><th>Activity</th><th>Details</th><th>Amount</th></tr></thead><tbody>
+      {list?.map((item) => <tr key={item.id}><td>{dateTime(item.created_at)}</td><td>{item.staff_name || '—'}</td><td>{item.action}</td><td>{item.description || item.details || '—'}</td><td>{item.amount == null ? '—' : money(item.amount)}</td></tr>)}
+      {list?.length === 0 && <tr><td colSpan="5" className="empty">No activity recorded yet.</td></tr>}
     </tbody></table>
   </>);
 }

@@ -4,10 +4,14 @@ import { api, useLoad, money, time } from './api';
 import { BrandLoader } from './Brand';
 
 function Card({ p, onSold }) {
-  const [qty, setQty] = useState(1), [msg, setMsg] = useState(''), [busy, setBusy] = useState(false);
+  const [qty, setQty] = useState(1), [customer, setCustomer] = useState(''), [msg, setMsg] = useState(''), [busy, setBusy] = useState(false);
   const sell = async () => {
     setBusy(true); setMsg('');
-    try { await api('/sales', { method: 'POST', body: { product_id: p.id, quantity: qty } }); setQty(1); onSold(); }
+    try {
+      const sale = await api('/sales', { method: 'POST', body: { product_id: p.id, quantity: qty, customer_name: customer.trim() || null } });
+      onSold({ product: p, quantity: Number(qty), customer: customer.trim(), sale });
+      setQty(1); setCustomer('');
+    }
     catch (e) { setMsg(e.message); } finally { setBusy(false); }
   };
   return (
@@ -20,8 +24,43 @@ function Card({ p, onSold }) {
         <input type="number" min="1" max={p.stock} value={qty} onChange={(e) => setQty(Math.max(1, +e.target.value))} />
         <button className="primary" disabled={busy || qty > p.stock} onClick={sell}>Mark as sold</button>
       </div>}
+      {p.stock > 0 && <input className="customer-name" maxLength="120" aria-label={`Customer name for ${p.name}`} placeholder="Customer name (optional)" value={customer} onChange={(e) => setCustomer(e.target.value)} />}
       {msg && <div className="err">{msg}</div>}
     </div>
+  );
+}
+
+function ReceiptDialog({ receipt, onClose }) {
+  const dialog = useRef(null);
+  useEffect(() => {
+    if (receipt && dialog.current && !dialog.current.open) dialog.current.showModal();
+    if (!receipt && dialog.current?.open) dialog.current.close();
+  }, [receipt]);
+  if (!receipt) return null;
+  const sale = receipt.sale?.sale || receipt.sale || {};
+  const unitPrice = Number(sale.unit_price ?? receipt.product.price);
+  const total = Number(sale.total ?? unitPrice * receipt.quantity);
+  const soldAt = sale.sold_at || sale.created_at || new Date().toISOString();
+  return (
+    <dialog ref={dialog} className="receipt-dialog" onCancel={onClose}>
+      <div className="receipt-paper">
+        <img className="receipt-logo" src="/dranks.jpg" alt="Dranks" />
+        <h2>Sales receipt</h2>
+        {sale.id && <p>Receipt #{sale.id}</p>}
+        <p>{new Date(soldAt).toLocaleString()}</p>
+        <p>Customer: {receipt.customer || 'Walk-in customer'}</p>
+        <hr />
+        <div className="receipt-line"><span>{receipt.product.name} x {receipt.quantity}</span><span>{money(total)}</span></div>
+        <small>{money(unitPrice)} each</small>
+        <hr />
+        <div className="receipt-line receipt-total"><b>Total paid</b><b>{money(total)}</b></div>
+        <p className="receipt-thanks">Thank you for shopping with Dranks.</p>
+      </div>
+      <div className="dialog-actions no-print">
+        <button type="button" onClick={onClose}>Close</button>
+        <button type="button" className="primary" onClick={() => window.print()}>Print receipt</button>
+      </div>
+    </dialog>
   );
 }
 
@@ -57,17 +96,20 @@ export function Dashboard() {
 
 export function Shop() {
   const [list, reload, err, loading] = useLoad('/products');
+  const [receipt, setReceipt] = useState(null);
   return (<>
     <h2>Shop floor</h2>
     {err && <div className="err">{err}</div>}
     {!list && loading && <BrandLoader label="Loading products..." />}
-    <div className="grid">{list?.map((p) => <Card key={p.id} p={p} onSold={reload} />)}</div>
+    <div className="grid">{list?.map((p) => <Card key={p.id} p={p} onSold={(sale) => { reload(); setReceipt(sale); }} />)}</div>
     {list?.length === 0 && <p className="empty">No products yet. Your admin will add them.</p>}
+    <ReceiptDialog receipt={receipt} onClose={() => setReceipt(null)} />
   </>);
 }
 
 export function Today() {
   const [sales, reload, err, loading] = useLoad('/sales/today');
+  const [receipt, setReceipt] = useState(null);
   const [note, setNote] = useState(''), [msg, setMsg] = useState(''), [e2, setE2] = useState(''), [submitting, setSubmitting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const reportDialog = useRef(null);
@@ -86,6 +128,7 @@ export function Today() {
   };
   return (<>
     <h2>Today’s record</h2>
+    <ReceiptDialog receipt={receipt} onClose={() => setReceipt(null)} />
     {err && <div className="err">{err}</div>}
     {!sales && loading && <BrandLoader label="Loading today’s record..." />}
     <div className="stats">
@@ -93,10 +136,10 @@ export function Today() {
       <div><span>{money(sum(sales || [], 'total'))}</span>total today</div>
       <div><span>{open.length}</span>sales not yet reported</div>
     </div>
-    <table><thead><tr><th>Time</th><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th></th></tr></thead><tbody>
+    <table><thead><tr><th>Time</th><th>Product</th><th>Qty</th><th>Price</th><th>Total</th><th>Status</th><th></th></tr></thead><tbody>
       {sales?.map((s) => <tr key={s.id}><td>{time(s.sold_at)}</td><td>{s.product_name}</td><td>{s.quantity}</td><td>{money(s.unit_price)}</td><td>{money(s.total)}</td>
-        <td>{s.report_id && <span className="pill pending">In a report</span>}</td></tr>)}
-      {sales?.length === 0 && <tr><td colSpan="6" className="empty">Nothing sold yet. Mark items as sold on the Shop floor and they appear here.</td></tr>}
+        <td>{s.report_id && <span className="pill pending">In a report</span>}</td><td><button onClick={() => setReceipt({ sale: s, product: { name: s.product_name, price: s.unit_price }, quantity: Number(s.quantity), customer: s.customer_name || '' })}>Receipt</button></td></tr>)}
+      {sales?.length === 0 && <tr><td colSpan="7" className="empty">Nothing sold yet. Mark items as sold on the Shop floor and they appear here.</td></tr>}
     </tbody></table>
     <div className="report-submit">
       <button className="primary" disabled={!open.length} onClick={() => { setE2(''); setConfirmOpen(true); }}>Prepare report</button>

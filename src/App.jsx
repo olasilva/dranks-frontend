@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { Routes, Route, Navigate, NavLink, Outlet } from 'react-router-dom';
 import Login from './Login';
 import Reports from './Reports';
-import { Overview, Products, Staff, Logins } from './Admin';
+import { Overview, Products, Staff, Logins, Activity } from './Admin';
 import { Dashboard, Shop, Today } from './Staff';
 import { BrandLogo } from './Brand';
 
@@ -44,11 +44,12 @@ export default function App() {
     <Ctx.Provider value={{ user, login, logout }}>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<Shell role="admin" links={[['/admin', 'Overview', true], ['/admin/products', 'Products'], ['/admin/staff', 'Staff'], ['/admin/logins', 'Login activity'], ['/admin/reports', 'Reports']]} />}>
+        <Route path="/admin" element={<Shell role="admin" links={[['/admin', 'Overview', true], ['/admin/products', 'Products'], ['/admin/staff', 'Staff'], ['/admin/logins', 'Login activity'], ['/admin/activity', 'Activity & payments'], ['/admin/reports', 'Reports']]} />}>
           <Route index element={<Overview />} />
           <Route path="products" element={<Products />} />
           <Route path="staff" element={<Staff />} />
           <Route path="logins" element={<Logins />} />
+          <Route path="activity" element={<Activity />} />
           <Route path="reports" element={<Reports admin />} />
         </Route>
         <Route path="/staff" element={<Shell role="staff" links={[['/staff', 'Dashboard', true], ['/staff/shop', 'Shop floor'], ['/staff/today', 'Today’s record'], ['/staff/reports', 'My reports']]} />}>
