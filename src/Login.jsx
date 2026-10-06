@@ -37,7 +37,7 @@ export default function Login({ requiredRole }) {
         </label>
         {err && <div className="err">{err}</div>}
         <button className="primary" disabled={busy}>
-          {busy ? <span className="login-loading"><img src="/dranks.jpg" alt="" /> Signing in...</span> : requiredRole ? `Sign in as ${requiredRole}` : 'Sign in'}
+          {busy ? <span className="login-loading"><img src="/ranktel.png" alt="" /> Signing in...</span> : requiredRole ? `Sign in as ${requiredRole}` : 'Sign in'}
         </button>
       </form>
     </div>

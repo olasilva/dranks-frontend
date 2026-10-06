@@ -1,7 +1,7 @@
-const LOGO_PATH = '/dranks.jpg';
+const LOGO_PATH = '/ranktel.png';
 
 export function BrandLogo() {
-  return <div className="brand"><img src={LOGO_PATH} alt="Dranks" /></div>;
+  return <div className="brand"><img src={LOGO_PATH} alt="Ranktel" /></div>;
 }
 
 export function BrandLoader({ label = 'Loading...' }) {

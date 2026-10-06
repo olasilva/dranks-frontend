@@ -44,7 +44,7 @@ function ReceiptDialog({ receipt, onClose }) {
   return (
     <dialog ref={dialog} className="receipt-dialog" onCancel={onClose}>
       <div className="receipt-paper">
-        <img className="receipt-logo" src="/dranks.jpg" alt="Dranks" />
+        <img className="receipt-logo" src="/ranktel.png" alt="Ranktel" />
         <h2>Sales receipt</h2>
         {sale.id && <p>Receipt #{sale.id}</p>}
         <p>{new Date(soldAt).toLocaleString()}</p>
@@ -54,7 +54,7 @@ function ReceiptDialog({ receipt, onClose }) {
         <small>{money(unitPrice)} each</small>
         <hr />
         <div className="receipt-line receipt-total"><b>Total paid</b><b>{money(total)}</b></div>
-        <p className="receipt-thanks">Thank you for shopping with Dranks.</p>
+        <p className="receipt-thanks">Thank you for shopping with Ranktel.</p>
       </div>
       <div className="dialog-actions no-print">
         <button type="button" onClick={onClose}>Close</button>

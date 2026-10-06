@@ -1,10 +1,10 @@
-:root{--ink:#11100d;--paper:#fbfaf7;--line:#dedbd2;--gold:#c9a227;--sage:#2f7a63;--amber:#a86a10;--rose:#b0364a}
+:root{--ink:#1f2430;--paper:#f6f6f3;--line:#d8d8d4;--brand-blue:#0f3fb8;--brand-blue-dark:#0b2d8d;--brand-orange:#d98d2d;--brand-grey:#81898f;--gold:var(--brand-orange);--sage:#2f7a63;--amber:#a86a10;--rose:#b0364a}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 'DM Sans',system-ui,sans-serif}
 h1,h2,h3{font-family:'Bricolage Grotesque',sans-serif;margin:0 0 .6rem}h2{font-size:1.8rem;display:flex;gap:1rem;align-items:center}h3{font-size:1.05rem}
 button,input,textarea{font:inherit}button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:.45rem .8rem;cursor:pointer;color:var(--ink)}
 button:hover{border-color:var(--ink)}button:disabled{opacity:.45;cursor:not-allowed}
-button.primary{background:var(--gold);border-color:var(--gold);color:#0d0d0d;font-weight:700}button.primary:hover{background:#dbb53a;border-color:#dbb53a}button.danger{color:var(--rose)}
-:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+button.primary{background:var(--brand-blue);border-color:var(--brand-blue);color:#fff;font-weight:700}button.primary:hover{background:var(--brand-blue-dark);border-color:var(--brand-blue-dark)}button.danger{color:var(--rose)}
+:focus-visible{outline:2px solid var(--brand-blue);outline-offset:2px}
 input,textarea{border:1px solid var(--line);border-radius:6px;padding:.5rem .7rem;background:#fff;min-width:0}textarea{width:100%;min-height:70px;margin-bottom:.6rem}
 input.sm{width:90px}label{display:grid;gap:.25rem;margin-bottom:.9rem;font-weight:500}
 .shell{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:100vh}
@@ -24,8 +24,8 @@ td small{display:block;color:#85827a}.empty{color:#85827a;text-align:center;padd
 .stats div{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:8px;padding:.9rem 1rem;color:#77746a}.stats span{display:block;font:700 1.7rem 'Bricolage Grotesque';color:var(--ink)}
 .dashboard-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem}.dashboard-actions a{padding:.45rem .8rem;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);text-decoration:none}.dashboard-actions a:hover{border-color:var(--ink)}
 .image-url{display:block;width:min(100%,260px);margin-top:.4rem;font-size:.85rem}.history-toggle{display:grid;place-items:center;width:36px;height:36px;padding:0}.history-icon{position:relative;display:block;width:16px;height:16px;border:2px solid currentColor;border-radius:50%}.history-icon::before{position:absolute;top:2px;left:6px;width:1px;height:5px;background:currentColor;content:""}.history-icon::after{position:absolute;top:6px;left:6px;width:4px;height:1px;background:currentColor;content:"";transform:rotate(25deg);transform-origin:left center}
-.brand{display:block;width:min(100%,190px)}.brand img{display:block;width:100%;height:auto;aspect-ratio:1080/608;object-fit:contain}.login .brand{width:min(100%,220px);margin:0 auto 1rem}
-.brand-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:1rem;color:#68645b}.brand-loader img{width:min(220px,75vw);height:auto;aspect-ratio:1080/608;object-fit:contain;animation:brand-pulse 1.6s ease-in-out infinite}.login-loading{display:inline-flex;align-items:center;justify-content:center;gap:.5rem}.login-loading img{width:44px;height:auto;aspect-ratio:1080/608;object-fit:contain;animation:brand-pulse 1.6s ease-in-out infinite}
+.brand{display:block;width:min(100%,190px);background:transparent}.brand img{display:block;width:100%;height:auto;aspect-ratio:1080/608;object-fit:contain;background:transparent}.login .brand{width:min(100%,220px);margin:0 auto 1rem}
+.brand-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem;padding:1rem;color:#68645b}.brand-loader img{width:min(220px,75vw);height:auto;aspect-ratio:1080/608;object-fit:contain;background:transparent;animation:brand-pulse 1.6s ease-in-out infinite}.login-loading{display:inline-flex;align-items:center;justify-content:center;gap:.5rem}.login-loading img{width:44px;height:auto;aspect-ratio:1080/608;object-fit:contain;background:transparent;animation:brand-pulse 1.6s ease-in-out infinite}
 @keyframes brand-pulse{50%{opacity:.58;transform:scale(.97)}}
 @keyframes page-enter{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
 @keyframes dialog-enter{from{opacity:0;transform:translateY(8px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}

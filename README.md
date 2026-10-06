@@ -1,10 +1,10 @@
-# Dranks: Inventory Frontend (React + Vite)
+# Ranktel Collections: Inventory Frontend (React + Vite)
 
 ```
 npm install
 npm run dev              # http://localhost:5173
 ```
-The shared brand mark and loader use `public/dranks.jpg`.
+The shared brand mark and loader use `public/ranktel.png`.
 In development, `/api` calls are proxied to the backend at http://localhost:5000, so start the backend first.
 
 ## Deploy to Vercel
