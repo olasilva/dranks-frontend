@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const BASE = import.meta.env.VITE_API_URL || '';
+const BASE = import.meta.env.VITE_API_URL || 'https://ranktel-backend.onrender.com';
 
 export async function api(path, { method = 'GET', body } = {}) {
   const t = localStorage.getItem('token');

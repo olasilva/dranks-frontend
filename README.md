@@ -13,7 +13,7 @@ Import this repository into Vercel with the project root as the root directory. 
 
 In the Vercel project settings, add these environment variables for Production (and Preview if needed):
 
-- `VITE_API_URL`: the public backend origin, without a trailing slash (for example, `https://api.example.com`). The backend must allow requests from the Vercel deployment origin through CORS.
+- `VITE_API_URL`: the public backend origin, without a trailing slash (default: `https://ranktel-backend.onrender.com`). The backend must allow requests from the Vercel deployment origin through CORS.
 - `VITE_CURRENCY`: currency code, default `NGN`.
 
 Redeploy after adding or changing environment variables. The backend is not part of this repository and must be deployed separately. For local development, `/api` is proxied to `http://localhost:5000` by Vite.

@@ -4,6 +4,7 @@ import Login from './Login';
 import Reports from './Reports';
 import { Overview, Products, Staff, Logins, Activity } from './Admin';
 import { Dashboard, Shop, Today } from './Staff';
+import Orders from './Orders';
 import { BrandLogo } from './Brand';
 import { BranchProvider, useBranch } from './BranchContext';
 import BranchPicker from './BranchPicker';
@@ -97,6 +98,7 @@ export default function App() {
                 ['/admin/branches', 'Branches'], // <-- NEW LINK
                 ['/admin/logins', 'Login activity'], 
                 ['/admin/activity', 'Activity & payments'], 
+                ['/admin/orders', 'Customer orders'],
                 ['/admin/reports', 'Reports']
               ]} 
             />
@@ -107,6 +109,7 @@ export default function App() {
             <Route path="branches" element={<BranchAdmin />} /> {/* <-- NEW ROUTE */}
             <Route path="logins" element={<Logins />} />
             <Route path="activity" element={<Activity />} />
+            <Route path="orders" element={<Orders />} />
             <Route path="reports" element={<Reports admin />} />
           </Route>
 
@@ -115,6 +118,7 @@ export default function App() {
               role="staff" 
               links={[
                 ['/staff', 'Dashboard', true], 
+                ['/staff/orders', 'Incoming orders'],
                 ['/staff/shop', 'Shop floor'], 
                 ['/staff/today', 'Today’s record'], 
                 ['/staff/reports', 'My reports']
@@ -122,6 +126,7 @@ export default function App() {
             />
           }>
             <Route index element={<Dashboard />} />
+            <Route path="orders" element={<Orders />} />
             <Route path="shop" element={<Shop />} />
             <Route path="today" element={<Today />} />
             <Route path="reports" element={<Reports />} />
